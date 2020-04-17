@@ -1,0 +1,30 @@
+server:
+  port: 8090
+  use-forward-headers: true
+  tomcat:
+    protocol-header: x-forwarded-proto
+  servlet:
+    context-path: /api/own
+spring:
+  profiles.active: dev
+  application:
+     name: YiFuOwnWeb
+     type: com.alibaba.druid.pool.DruidDataSource
+     initialSize: 5
+     minIdle: 5
+     maxActive: 80
+     maxWait: 60000
+     timeBetweenEvictionRunsMillis: 60000
+     minEvictableIdleTimeMillis: 300000
+     validationQuery: select 1 from dual
+     testWhileIdle: true
+     testOnBorrow: false
+     testOnReturn: false
+     poolPreparedStatements: true
+     maxPoolPreparedStatementPerConnectionSize: 60
+     filters: stat,wall,log4j
+     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+     useGlobalDataSourceStat: true
+mybatis:
+  type-aliases-package: link.yifu.entity
+  mapper-locations: classpath*:config/mybatis/*.xml
