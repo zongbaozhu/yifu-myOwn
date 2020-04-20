@@ -34,11 +34,9 @@ public class PersonController {
     @GetMapping("/getUser")
     public PersonEntity getUser(){
         PersonEntity entity = new PersonEntity();
-        System.out.println("1111112");
         entity.setId(1);
         entity.setName("xx");
         entity.setAge(28);
-        System.out.println("1121112");
         return entity;
     }
 }
