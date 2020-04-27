@@ -1,8 +1,9 @@
-package link.yifu.aop;
+package link.yifu.handle;
 
 import link.yifu.enums.ExceptionEnum;
 import link.yifu.exception.APIException;
 import link.yifu.vo.ResultVO;
+import org.apache.shiro.ShiroException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class ExceptionControllerAdvice {
         // 然后提取错误提示信息进行返回
         return  new ResultVO<String>(ExceptionEnum.VALIDATE_FAILED, objectError.getDefaultMessage());
     }
+
+    @ExceptionHandler(ShiroException.class)
+    public ResultVO<String> ShiroExceptionHandler(ShiroException e) {
+        return new ResultVO<String>(ExceptionEnum.NO_PERMISSION,e.getMessage());
+    }
+
     @ExceptionHandler(APIException.class)
     public ResultVO<String> APIExceptionHandler(APIException e){
         return new ResultVO<String>(ExceptionEnum.FAILED,e.getMsg());//e.getMsg();

@@ -1,4 +1,4 @@
-package link.yifu.aspect;
+package link.yifu.aop;
 
 
 
@@ -25,7 +25,7 @@ import java.util.Enumeration;
 @Aspect
 @Component
 @Slf4j
-public class LogControllerAdvice {
+public class LogAspect {
     //private final Logger logger = LogManager.getLogger(LogControllerAdvice.class);;
     //这个方法会拦截com.ssrtest02.controller项目包所有类的所有方法
     @Pointcut("execution(public * link.yifu.controller..*.*(..))")
