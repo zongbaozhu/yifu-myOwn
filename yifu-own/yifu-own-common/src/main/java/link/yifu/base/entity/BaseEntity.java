@@ -1,4 +1,4 @@
-package link.yifu.entity;
+package link.yifu.base.entity;
 
 import com.sun.istack.internal.NotNull;
 import lombok.Data;

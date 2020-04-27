@@ -1,4 +1,4 @@
-package link.yifu.service;
+package link.yifu.base.service;
 
 import link.yifu.dto.Result;
 

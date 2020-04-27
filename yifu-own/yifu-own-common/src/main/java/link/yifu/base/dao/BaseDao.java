@@ -1,6 +1,4 @@
-package link.yifu.dao;
-
-import org.apache.ibatis.annotations.Mapper;
+package link.yifu.base.dao;
 
 import java.util.List;
 import java.util.Map;

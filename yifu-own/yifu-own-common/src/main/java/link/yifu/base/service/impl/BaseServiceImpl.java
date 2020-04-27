@@ -1,4 +1,4 @@
-package link.yifu.service.impl;
+package link.yifu.base.service.impl;
 
 
 import org.apache.commons.lang3.StringUtils;
