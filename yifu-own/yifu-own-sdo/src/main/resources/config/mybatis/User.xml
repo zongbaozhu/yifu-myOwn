@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="link.yifu.base.dao.UserDAO">
+    <resultMap id="user" type="link.yifu.entity.UserEntity">
+        <result property="id" column="id"></result>
+        <result property="account" column="account"></result>
+        <result property="name" column="name"></result>
+        <result property="password" column="password"></result>
+        <result property="email" column="email"></result>
+        <result property="phone" column="phone"></result>
+        <result property="status" column="status"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="lastModifiedTime" column="last_modified_time"/>
+        <collection property="roleLists" ofType="link.yifu.entity.RoleEntity">
+            <result property="id" column="role.id"></result>
+            <result property="name" column="role.name"></result>
+        </collection>
+        <collection property="permissionLists" ofType="link.yifu.entity.PermissionEntity">
+            <result property="id" column="menu.id"></result>
+            <result property="icon" column="menu.icon"></result>
+            <result property="url" column="menu.url"></result>
+            <result property="priority" column="menu.priority"></result>
+            <result property="permission" column="menu.permission"></result>
+            <result property="parentID" column="menu.parent_id"></result>
+            <result property="desc" column="menu.desc"></result>
+            <result property="type" column="menu.type"></result>
+        </collection>
+    </resultMap>
+
+    <select id="selectUserByMap" parameterType="map" resultMap="user">
+        select
+        a.id,
+        a.account,
+        a.name,
+        a.password,
+        a.email,
+        a.phone,
+        a.created_time,
+        c.id AS "role.id",
+        c.name AS "role.name",
+        e.id AS "menu.id",
+        e.icon AS "menu.icon",
+        e.url AS "menu.url",
+        e.priority AS "menu.priority",
+        e.permission AS "menu.permission",
+        e.parent_id AS "menu.parent_id",
+        e.desc AS "menu.desc",
+        e.type AS "menu.type"
+        from `user` a
+        left join user_role b on b.user_id = a.id
+        left join role c on c.id = b.role_id
+        left join role_permission d on d.role_id = c.id
+        left join permission e on e.id = d.permission_id
+        where 1=1
+        <if test="userName != null and userName != ''">
+            a.name = #{userName}
+        </if>
+
+    </select>
+
+    <select id="get" parameterType="map" resultMap="user">
+        select id,`name`,account,`name`,password,email,phone,created_time
+        from `user`
+        where `status` = 1
+        <if test="q != null and q != ''">
+            and (`name` like CONCAT('%', #{q}, '%') or account like CONCAT('%', #{q}, '%'))
+        </if>
+
+        <if test="startTime !=null and startTime != ''">
+            and created_time >= #{startTime}
+        </if>
+        <if test="endTime !=null and endTime != ''">
+            and created_time <![CDATA[<=]]> #{endTime}
+        </if>
+        order by created_time desc
+        <if test="start != null and limit != null">
+            limit ${start}, ${limit}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT count(*) as total FROM `user`
+        where `status` = 1
+        <if test="q != null and q != ''">
+            and (`name` like CONCAT('%', #{q}, '%') or account like CONCAT('%', #{q}, '%'))
+        </if>
+        <if test="startTime !=null and startTime != ''">
+            and a.created_time >= #{startTime}
+        </if>
+        <if test="endTime !=null and endTime != ''">
+            and a.created_time <![CDATA[<=]]> #{endTime}
+        </if>
+    </select>
+
+    <select id="getByEntity" parameterType="link.yifu.entity.UserEntity" resultMap="user">
+        SELECT id,`name`,account,`name`,password,email,phone,created_time FROM `user`
+        where `status` = 1
+        <if test="name != null and name != ''">
+            and `name` = #{name}
+        </if>
+        <if test="account != null and account != ''">
+            and account = #{account}
+        </if>
+        order by id desc limit 1
+    </select>
+
+    <insert id="add" parameterType="link.yifu.entity.UserEntity">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO `user` (account,`name`,password,email,phone,created_time)
+        VALUES (#{account},#{name},#{password},#{email},#{phone},NOW())
+    </insert>
+
+    <update id="update" parameterType="link.yifu.entity.UserEntity">
+        UPDATE `user`
+        <set>
+            <if test="account !=null and account != ''">
+                account = #{account},
+            </if>
+            <if test="name !=null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="password !=null and password != ''">
+                password = #{password},
+            </if>
+            <if test="email !=null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phone !=null and phone != ''">
+                phone = #{phone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="link.yifu.entity.UserEntity">
+        update `user` set status = 0
+        where id = #{id}
+    </delete>
+
+</mapper>

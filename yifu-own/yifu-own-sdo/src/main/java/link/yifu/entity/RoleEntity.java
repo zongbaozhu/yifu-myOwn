@@ -2,17 +2,14 @@ package link.yifu.entity;
 
 import link.yifu.base.entity.BaseEntity;
 import lombok.Data;
-import javax.validation.constraints.NotNull;
 
 /*
  @Author: ZongbaoZhu
  @Description: ${DESCRIPTION}
- @Date: 2020/4/3 14:45
+ @Date: 2020/4/24 15:00
  @Version: 1.0
 */
 @Data
-public class PersonEntity extends BaseEntity {
-    @NotNull(message = "用户name不为空")
+public class RoleEntity extends BaseEntity {
     private String name;
-    private Integer age;
 }

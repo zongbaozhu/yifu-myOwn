@@ -1,6 +1,7 @@
 package link.yifu.service.impl;
 
 import link.yifu.dao.PersonDAO;
+import link.yifu.base.service.impl.BaseServiceImpl;
 import link.yifu.dto.Result;
 import link.yifu.entity.PersonEntity;
 import link.yifu.service.PersonService;

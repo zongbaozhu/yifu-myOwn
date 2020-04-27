@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="link.yifu.base.dao.RolePermissionDAO">
+
+    <resultMap id="rolePermission" type="link.yifu.entity.RolePermissionEntity">
+        <result property="id" column="id"/>
+        <result property="roleID" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="permissionID" column="permission_id"/>
+        <result property="permissionName" column="permission_name"/>
+        <result property="status" column="status"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="lastModifiedTime" column="last_modified_time"/>
+    </resultMap>
+
+    <select id="get" parameterType="map" resultMap="rolePermission">
+        select a.id, a.role_id, a.permission_id, b.name as role_name, c.name as permission_name
+        FROM `role_permission` a, `role` b, `permission` c
+        where a.status != 0 and a.role_id = b.id and a.user_id = c.id
+        <if test="roleID != null and roleID != ''">
+            and a.role_id = #{roleID}
+        </if>
+        <if test="permissionID != null and permissionID != ''">
+            and a.permission_id = #{permissionID}
+        </if>
+        order by a.id desc
+        <if test="start != null and limit != null">
+            limit ${start}, ${limit}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as total
+        FROM `role_permission`
+        where status != 0
+        <if test="roleID != null and roleID != ''">
+            and role_id = #{roleID}
+        </if>
+        <if test="permissionID != null and permissionID != ''">
+            and permission_id = #{permissionID}
+        </if>
+    </select>
+
+    <select id="getByEntity" parameterType="link.yifu.entity.RolePermissionEntity" resultMap="rolePermission">
+        select id, role_id, permission_id
+        FROM `role_permission`
+        where status != 0 and id = #{id}
+        order by id desc limit 1
+    </select>
+
+    <insert id="add" parameterType="link.yifu.entity.RolePermissionEntity">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into `role_permission` (`role_id`, `permission_id`, `created_time`) VALUES
+        (#{roleID}, #{permissionID}, NOW())
+    </insert>
+
+    <insert id="addBatch" parameterType="java.util.List" useGeneratedKeys="true">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into `role_permission` (`role_id`, `permission_id`, `created_time`) VALUES
+        <foreach collection="list" item="rolePermission" index="index" separator=",">
+            (
+            #{rolePermission.roleID},#{rolePermission.permissionID},NOW()
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="link.yifu.entity.RolePermissionEntity">
+        update `role_permission` set `permission_id` = #{permissionID} where id = #{id}
+    </update>
+
+    <update id="delete" parameterType="link.yifu.entity.RolePermissionEntity">
+        update `role_permission` set status = 0
+        where id = #{id}
+        <if test="roleID != null and roleID !=''">
+            and role_id = #{roleID}
+        </if>
+        <if test="permissionID != null and permissionID != ''">
+            and permission_id = #{permissionID}
+        </if>
+    </update>
+
+
+
+</mapper>
